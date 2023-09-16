@@ -1,11 +1,12 @@
 package com.oauth2.config;
 
-import com.oauth2.service.ClientDetailsRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
+import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.oauth2.core.AuthorizationGrantType;
@@ -22,6 +23,7 @@ import org.springframework.security.oauth2.server.authorization.settings.ClientS
 import org.springframework.security.oauth2.server.authorization.settings.TokenSettings;
 import org.springframework.security.web.SecurityFilterChain;
 
+import javax.sql.DataSource;
 import java.time.Duration;
 import java.util.UUID;
 
@@ -29,7 +31,13 @@ import java.util.UUID;
 public class AuthorizationServerConfig {
 
     @Autowired
-    ClientDetailsRepo clientDetailsRepo;
+    private JdbcTemplate jdbcTemplate;
+
+    @Autowired
+    @Qualifier("dataSource")
+    private DataSource dataSource;
+
+
     @Bean
     public RegisteredClientRepository registeredClientRepository() {
 
@@ -46,9 +54,10 @@ public class AuthorizationServerConfig {
                 .scope("read")
                 .build();
 
-//        JdbcRegisteredClientRepository clientRepository = new JdbcRegisteredClientRepository(clientDetailsRepo)
-
-        return new InMemoryRegisteredClientRepository(registeredClient);
+        JdbcRegisteredClientRepository clientRepository = new JdbcRegisteredClientRepository(jdbcTemplate);
+        clientRepository.save(registeredClient);
+        return  clientRepository;
+//        return new InMemoryRegisteredClientRepository(registeredClient);
     }
 
     @Bean

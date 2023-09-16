@@ -1,0 +1,44 @@
+#server.port=8081
+#
+#spring.jpa.properties.hibernate.dialect = org.hibernate.dialect.MySQLDialect
+#spring.jpa.hibernate.ddl-auto=create
+#spring.jpa.hibernate.show-sql=true
+#spring.datasource.url=jdbc:postgresql://localhost:5432/oauth2-server
+#spring.datasource.username=postgres
+#spring.datasource.password=root
+
+#spring.datasource.initialization-mode=always
+#spring.datasource.initialize=true
+#spring.datasource.schema=classpath:/schema.sql
+#spring.datasource.continue-on-error=true
+
+server:
+  port: 8081
+
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/oauth2-server
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: postgres
+    password: root
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect
+    generate-ddl: true
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+      naming:
+        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+    properties:
+      hibernate:
+        jdbc:
+          lob:
+            non_contextual_creation: true
+        format-sql: true
+        dialect: org.hibernate.dialect.MySQLDialect
+
+# App Properties
+jwt:
+  keys:
+    jwtSecret: bezKoderSecretKeyadadasdaascascascascascascascdascascascacascascasc
+    jwtExpirationMs: 86400000
